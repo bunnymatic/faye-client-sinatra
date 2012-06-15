@@ -2,9 +2,15 @@ $(function() {
 
   var thisclient;
   var thatclient;
-  var subscription;
   
-  var client = new Faye.Client("http://localhost:5000/maucomm");
+  /** if you do not specify the port here, this will try to use the
+      client port and communication with the server may fail */
+  var server_uri = 'http://maucomm.herokuapp.com:80/maucomm';
+  var subscription;
+
+  var client = new Faye.Client(server_uri);
+  /* heroku doesn't like websocket */
+  client.disable('websocket');
 
   $('#publish').bind('submit', function() {
     var msg = $(this).find('input#message').val();
@@ -19,7 +25,8 @@ $(function() {
       subscription.cancel();
     }
     subscription = client.subscribe('/'+channel,  function(msg) {
-      $('#messages').prepend($('<li>').html(msg.text));
+      $('#messages li').removeClass('new');
+      $('#messages').prepend($('<li class="new">').html(msg.text));
     });
     subscription.callback(function() {
       alert('You\'re now listenin to ' + channel);
