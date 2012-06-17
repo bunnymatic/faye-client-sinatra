@@ -5,7 +5,8 @@ $(function() {
   
   /** if you do not specify the port here, this will try to use the
       client port and communication with the server may fail */
-  var server_uri = 'http://maucomm.herokuapp.com:80/maucomm';
+  /** var server_uri = 'http://maucomm.herokuapp.com:80/maucomm';*/
+  var server_uri = 'http://localhost:3030/maucomm';
   var subscription;
 
   var client = new Faye.Client(server_uri);
@@ -26,7 +27,8 @@ $(function() {
     }
     subscription = client.subscribe('/'+channel,  function(msg) {
       $('#messages li').removeClass('new');
-      $('#messages').prepend($('<li class="new">').html(msg.text));
+      var safemsg = msg.text || msg;
+      $('#messages').prepend($('<li class="new">').html(safemsg));
     });
     subscription.callback(function() {
       alert('You\'re now listenin to ' + channel);

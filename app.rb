@@ -1,11 +1,31 @@
 require 'rubygems'
-require 'sinatra'
+require 'sinatra/base'
+require 'eventmachine'
+require 'faye'
 
-configure do
-  set :public_folder, Proc.new { File.join(root, "static") }
-  enable :sessions
+class WebFrontApp < Sinatra::Base
+  
+  configure do
+    set :public_folder, Proc.new { File.join(root, "static") }
+    enable :sessions
+  end
+
+  get '/' do
+    erb :index
+  end
+
 end
 
-get '/' do
-  erb :index
-end
+emthread = Thread.new {
+  EM.run {  
+    client = Faye::Client.new('http://localhost:3030/maucomm')
+
+    client.subscribe('/tweedledee') do |msg|
+      puts "[tweedledee] #{msg}"
+    end
+
+    client.subscribe('/tweedledum') do |msg|
+      puts "[tweedledum] #{msg}"
+    end
+  }
+}
