@@ -18,7 +18,7 @@ end
 
 emthread = Thread.new {
   EM.run {  
-    client = Faye::Client.new('http://localhost:3030/maucomm')
+    client = Faye::Client.new(FAYE_SERVER_URL)
 
     client.subscribe('/tweedledee') do |msg|
       puts "[tweedledee] #{msg}"

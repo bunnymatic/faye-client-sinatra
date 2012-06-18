@@ -6,7 +6,7 @@ $(function() {
   /** if you do not specify the port here, this will try to use the
       client port and communication with the server may fail */
   /** var server_uri = 'http://maucomm.herokuapp.com:80/maucomm';*/
-  var server_uri = 'http://localhost:3030/maucomm';
+  var server_uri = FAYE_SERVER_URL;
   var subscription;
 
   var client = new Faye.Client(server_uri);
